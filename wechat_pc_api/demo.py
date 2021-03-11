@@ -4,9 +4,14 @@ from __future__ import unicode_literals
 import wechat
 import json
 import time
+from mytimer import get_time_distanse
 from wechat import WeChatManager, MessageType
 from Imgdecode import decodeing
 from sqliteop import insert_db
+import sys
+sys.path.append("../")
+import config
+
 wechat_manager = WeChatManager(libs_path='./libs')
 sqlite_url="../Web/db.sqlite3"
 imgstore_url="../Web/media/img"
@@ -31,6 +36,16 @@ def on_close(client_id):
 # 这里测试类回调， 函数回调与类回调可以混合使用
 class LoginTipBot(wechat.CallbackHandler):
 
+    @wechat.CONNECT_CALLBACK(in_class=True)
+    def on_connect(self, client_id, message_type, message_data):
+        def startTimer(): 
+            if timer != None: 
+                wechat_manager.send_text(client_id,'wxid_pkfm888mt7zd22','预定时间已到')
+                timer.finished.wait(get_time_distanse(datetme.datetime.now(),config.time_setting))
+                timer.function()
+        timer=threading.Timer(get_time_distanse(datetme.datetime.now(),config.time_setting),startTimer)
+        timer.start()
+
     @wechat.RECV_CALLBACK(in_class=True)
     def on_message(self, client_id, message_type, message_data):
         if message_type == MessageType.MT_RECV_PICTURE_MSG and (message_data["room_wxid"] == chatroom  or message_data["room_wxid"]==''):
@@ -48,10 +63,6 @@ class LoginTipBot(wechat.CallbackHandler):
                 insert_db(pic_name,sqlite_url,message_data['from_wxid'])
             elif pic_name=='网络不好或者撤回太早':
                 wechat_manager.send_text(client_id,'wxid_pkfm888mt7zd22',pic_name)
-    def on_time(self,client_id):
-        date=time.strftime('%Y-%m-%d',time.localtime(time.time()))
-        a=1
-        wechat_manager.send_text(client_id,'wxid_pkfm888mt7zd22','时间到了')
 
 
 if __name__ == "__main__":

@@ -9,8 +9,10 @@ from django.db import models
 from django.utils import timezone
 from django.db.models import Count
 import datetime
+import sys
+sys.path.append('..')
+import config
 # Create your views here.
-time_setting=22  #这个是整点，代表着多少点的时候该天内容结束，换下一天
 
 
 @login_required
@@ -35,7 +37,7 @@ def uploadImg(request): # 图片上传函数
 def showImg(request,year="",month="",day=""):
     date_of_pics=year+"-"+month+"-"+day
     from app1.utility import today_limit
-    a,b=today_limit(date_of_pics,time_setting)
+    a,b=today_limit(date_of_pics,config.time_setting)
     imgs = Img.objects.filter(date__range=(a,b)) # 从数据库中取出所有的图片路径
     context = {
         'imgs' : imgs
@@ -77,13 +79,15 @@ def login(request):
 def out(request):
     auth.logout(request)
     return redirect('/login/')
+
+
 #vote应该只有投票功能，所以三者不在的情况下需要转向使用showImg来进行
 @login_required
 def index(request):
 
     #给html页面一个数据库种所有日期的set，从而让它一个个来创建链接
     username = request.user.get_username()
-    judgedate=datetime.datetime(1,1,1,time_setting,0,0)
+    judgedate=datetime.datetime(1,1,1,config.time_setting,0,0)
     p=Img.objects.all()
     q=p
     datelist=[]
@@ -101,7 +105,7 @@ def index(request):
         n.append(m[1])
         #如果大于等于，则说明它应该放入下一天的内容里面
         flag=datetime.datetime(1,1,1,int(n[3][:2]),0,0).__ge__(judgedate)
-        datelmt=datetime.datetime(int(m[0][0]),int(m[0][1]),int(m[0][2]),time_setting,0,0)
+        datelmt=datetime.datetime(int(m[0][0]),int(m[0][1]),int(m[0][2]),config.time_setting,0,0)
         if not flag:
             datelist.append(m[0])
             date_tmp=datelmt+datetime.timedelta(days=-1)
@@ -111,16 +115,17 @@ def index(request):
             datelist.append(date_tmp.strftime("%Y-%m-%d").split('-'))
             q=q.exclude(date__range=(datelmt,date_tmp))
     datelist.reverse()
-    #两个用途
+
+    #判断今天是哪一天，应该可以继续简化成函数
     today=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    datelmt1=datetime.datetime(int(today[0:4]),int(today[5:7]),int(today[8:10]),time_setting,0,0)
+    datelmt1=datetime.datetime(int(today[0:4]),int(today[5:7]),int(today[8:10]),config.time_setting,0,0)
     if datelmt1.__ge__(datetime.datetime.now()):
         #是今天，昨天22到今天22
         datelmt2=datelmt1+datetime.timedelta(days=-1)
         is_today=True
         vote_date=(datetime.datetime.now()+datetime.timedelta(days=-1)).strftime("%Y-%m-%d")
     else:
-        #不是今天，今天22到明天22
+        #不是今天，今天22到明天22   (本来应该是明天10点，但是目前没有好的想法)
         date_tmp=datelmt1
         daelmt1=datelmt1+datetime.timedelta(days=+1)
         datelmt2=date_tmp
@@ -135,7 +140,7 @@ def index(request):
     #这部分的01逻辑不是很好，但是可以起作用
     #range为vote_date的那一天内，可以写一个函数来生成对应的范围了
     from app1.utility import today_limit
-    a,b=today_limit(vote_date,time_setting)
+    a,b=today_limit(vote_date,config.time_setting)
     if Img.objects.filter(date__range=(a,b)).exists():
         vote_date=vote_date.split('-')
         display_result=datelist.index(vote_date)
@@ -191,7 +196,7 @@ def votes(request,year="",month="",day=""):     #这个，日期该怎么修改�
             m.save()
             return HttpResponse('投票成功')
     from app1.utility import today_limit
-    a,b=today_limit(date_of_pics,time_setting)
+    a,b=today_limit(date_of_pics,config.time_setting)
     imgs = Img.objects.filter(date__range=(a,b))
     context = {
     'imgs' : imgs,
@@ -204,7 +209,7 @@ def votes(request,year="",month="",day=""):     #这个，日期该怎么修改�
 def result(request,year="",month="",day=""):
     date_of_pics=year+"-"+month+"-"+day
     from app1.utility import today_limit
-    a,b=today_limit(date_of_pics,time_setting)
+    a,b=today_limit(date_of_pics,config.time_setting)
     imgs = Img.objects.filter(date__range=(a,b)).order_by("-vote")
 
     context = {
