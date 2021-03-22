@@ -1,3 +1,10 @@
+<style>
+a
+{
+	text-decoration:none;
+}
+a:visited{color:#0000ff; }
+</style>
 <form action="/out/" method="get">
     欢迎用户 {{user.get_username}}  <input type="submit" value="退出登陆">
 </form>
@@ -12,10 +19,10 @@
 {% if show_dates %}
     <ul>
     {% for show_date in show_dates %}
-        <li><a href="{% url 'showImg' show_date.0 show_date.1 show_date.2%}">
+        <li><a href="{% url 'showImg' show_date.0 show_date.1 show_date.2%}" target="show_window">
         {{ show_date.0 }}年{{ show_date.1 }}月{{ show_date.2 }}日图片展示</a><br/>
         {%if forloop.counter > index %}
-        <a href="{% url 'result' show_date.0 show_date.1 show_date.2%}">
+        <a href="{% url 'result' show_date.0 show_date.1 show_date.2%}" target= "vote_result_window">
         {{ show_date.0 }}年{{ show_date.1 }}月{{ show_date.2 }}日投票结果</a><br/>
         {% endif %}
         
