@@ -1,17 +1,22 @@
-from django.shortcuts import render, get_object_or_404,reverse
+#pylint: disable-msg = import-error,unused-wildcard-import,no-member
+import sys
+sys.path.append('../')
+import datetime
+import config
+from django.shortcuts import render, get_object_or_404
 from django.shortcuts import redirect
-from django.http import HttpResponse, HttpResponseRedirect
-from app1.models import *
+from django.http import HttpResponse
 from django.contrib import auth
+from django.db import models
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.db import models
-from django.utils import timezone
-from django.db.models import Count
-import datetime
-import sys
-sys.path.append('..')
-import config
+from app1.models import *
+
+
+
+
+
+
 # Create your views here.
 
 

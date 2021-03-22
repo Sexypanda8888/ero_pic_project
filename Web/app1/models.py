@@ -7,6 +7,9 @@ class Img(models.Model):
     vote=models.IntegerField(default=0)
     update_person=models.CharField(max_length=50)
     delete_vote=models.IntegerField(default=0)
+    width=models.IntegerField(null=True)
+    height=models.IntegerField(null=True)
+    md5=models.CharField(null=True,max_length=33)
 class user_1(models.Model):
     userid=models.CharField(max_length=50 ,primary_key=True)  #和user是一对一的关系  
     wx_id=models.CharField(max_length=50,default='')

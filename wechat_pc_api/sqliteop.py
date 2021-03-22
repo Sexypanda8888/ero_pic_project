@@ -3,14 +3,14 @@ import time
 import pytz
 import datetime
 #我只需要插入操作
-def insert_db(pic_name,sqlite_url,update_person):
+def insert_db(pic_name,sqlite_url,update_person,height,width,md5):
       conn = sqlite3.connect(sqlite_url)
       tz=pytz.timezone('Asia/Shanghai')
       date=datetime.datetime.now(tz=tz).strftime("%Y-%m-%d %H:%M:%S")
       c = conn.cursor()
       url='img/'+pic_name
-      c.execute("INSERT INTO app1_img (img_url,date,vote,update_person,delete_vote) \
-            VALUES ('%s',datetime('%s'), 0 ,'%s',0)"% (url,date,update_person))
+      c.execute("INSERT INTO app1_img (img_url,date,vote,update_person,delete_vote,height,width,md5) \
+            VALUES ('%s',datetime('%s'), 0 ,'%s',0,%d,%d,'%s')"% (url,date,update_person,height,width,md5))
       conn.commit()
       conn.close()
       return 
