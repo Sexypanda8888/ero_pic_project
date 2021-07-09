@@ -4,23 +4,24 @@ import wechat
 import json
 import time
 from wechat import WeChatManager, MessageType
-from Imgdecode import decodeing
-from sqliteop import insert_db
 import os 
-wechat_manager = WeChatManager(libs_path='../../libs')
-class LoginTipBot(wechat.CallbackHandler):
+wechat_manager = WeChatManager(libs_path='./libs')
 
+# @wechat.CONNECT_CALLBACK(in_class=False)
+# def on_connect(client_id):
+#     print('[on_connect] client_id: {0}'.format(client_id))
+# @wechat.RECV_CALLBACK(in_class=False)
+# def on_recv(client_id, message_type, message_data):
+#     print('[on_recv] client_id: {0}, message_type: {1}, message:{2}'.format(client_id,
+#                                                                             message_type, json.dumps(message_data,ensure_ascii=False)))
+
+class LoginTipBot(wechat.CallbackHandler):
     @wechat.RECV_CALLBACK(in_class=True)
     def on_message(self, client_id, message_type, message_data):
-        if message_type == MessageType.MT_USER_LOGIN:
-            wechat_manager.get_chatroom_members(client_id,'24803859571@chatroom')#返回了一个Int值，不知道想干嘛
-        if message_type ==11032 :
-            nickname_wxid={}
-            lists=message_data['member_list']
-            for i in lists:
-                nickname_wxid[i['nickname']]=i['wxid']
-            print(nickname_wxid)
-        print()
+        if message_type ==11025 :
+            wechat_manager.get_chatrooms(client_id)
+        if message_type == MessageType.MT_DATA_CHATROOMS_MSG:
+            print(message_data)
 if __name__ == "__main__":
     bot = LoginTipBot()
 

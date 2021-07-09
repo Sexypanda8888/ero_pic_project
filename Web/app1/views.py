@@ -36,8 +36,8 @@ def uploadImg(request): # 图片上传函数
             img = Img(img_url=img_url,update_person=wxid,
                 date=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             img.save()
-
     return render(request, 'imgupload.html')
+
 @login_required
 def showImg(request,year="",month="",day=""):
     date_of_pics=year+"-"+month+"-"+day

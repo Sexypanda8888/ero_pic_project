@@ -25,7 +25,7 @@ SECRET_KEY = '=q#rnl33)gt2g8!p349d4&knci#a5f)fq#rikvo1=(g5c3)z7m'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['us-la-cn2.sakurafrp.com','127.0.0.1','us-or-aws.sakurafrp.com']
+ALLOWED_HOSTS = ['us-la-cn2.sakurafrp.com','127.0.0.1','us-or-aws.sakurafrp.com','155.94.144.151']
 
 
 # Application definition

@@ -9,8 +9,7 @@ from md5cul import GetFileMd5
 pic_head = {'jpg':0xffd8, 'png':0x8950, 'gif':0x4749}  #jpg png gif
 pic_tail = {'jpg':0xffd9, 'png':0x6082, 'gif':0x003B}
 #该函数功能为对一张图片进行解码并放入指定文件夹,返回其名字
-
-"""state=0,正常;state=1,网络不好或者撤回过早;state=2,是图片但是没有通过检验;state=3,图片类型越界或者不是图片"""
+#state=0,正常;state=1,网络不好或者撤回过早;state=2,是图片但是没有通过检验;state=3,图片类型越界或者不是图片
 def decodeing(imgurl,xor_key,store_url):
     #先判断文件是否存在，不在时等待； 之后判断文件是否下载完全；完全以后继续操作
     k=0
@@ -26,6 +25,7 @@ def decodeing(imgurl,xor_key,store_url):
             state=1
             return [None,1,0,0,0]
     print("\ndat文件生成!")
+    time.sleep(1)
     dat_file = open(imgurl, "rb") 
     dat_read = dat_file.read(2)
     dat_file.seek(0,0)
@@ -99,7 +99,7 @@ def decodeing(imgurl,xor_key,store_url):
     if not judgement.judge(pic_name):
         #图片检验函数
         state=2
-        return [None,state,0,0,0]
+        return [time_now + pic_id,state,0,0,0]
     pic=Image.open(pic_name)
     md5=GetFileMd5(pic_name)
     print("图片识别成功！")
@@ -107,7 +107,3 @@ def decodeing(imgurl,xor_key,store_url):
     return  [time_now + pic_id,state,pic.height,pic.width,md5]
 #几种状态1.不是图片2.是图片但是格式不对 3.是图片但是类型不对，可以直接返回数字
 #所以可以返回1.数字来表明状态 2.文件名，如果错误则为more样式
-# img_url="C:\\Users\\17197\\Desktop\\robot\\6d11b2cc1b4b14daa8b0c39a07c8cb75.dat"
-# xor_key=228
-# store_url='C:\\Users\\17197\\Desktop\\robot'
-# decode(imgurl=img_url,xor_key=228,store_url=store_url)
